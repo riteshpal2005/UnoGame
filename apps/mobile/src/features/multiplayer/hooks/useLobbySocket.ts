@@ -4,7 +4,7 @@ import { initializeSocket, getSocket } from '../utils/socket';
 
 export function useLobbySocket(
   setViewState: (state: any) => void,
-  navigate: (screen: string, params?: any) => void
+  router: any
 ) {
   const [ipAddress, setIpAddress] = useState('192.168.18.247'); 
   const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +32,7 @@ export function useLobbySocket(
     });
     
     socket.on('gameStarted', (initialData: any) => {
-       navigate('Game', { initialData });
+       router.push({ pathname: '/game', params: { initialData: JSON.stringify(initialData) } });
     });
 
     socket.on('error', (msg: string) => Alert.alert("Error", msg));

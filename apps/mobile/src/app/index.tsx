@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import * as Clipboard from 'expo-clipboard';
@@ -18,7 +19,8 @@ import { SettingsModal } from '../features/lobby/components/SettingsModal';
 type ViewState = 'menu' | 'connect' | 'join_create' | 'inside_room';
 type TabState = 'create' | 'join';
 
-export default function LobbyScreen({ navigation }: any) {
+export default function LobbyScreen() {
+  const router = useRouter();
   const [viewState, setViewState] = useState<ViewState>('menu');
   const [activeTab, setActiveTab] = useState<TabState>('create');
 
@@ -30,7 +32,7 @@ export default function LobbyScreen({ navigation }: any) {
     players,
     isHost,
     handleConnect
-  } = useLobbySocket(setViewState, navigation.navigate);
+  } = useLobbySocket(setViewState, router);
 
   const [nickname, setNickname] = useState('');
   
@@ -51,7 +53,7 @@ export default function LobbyScreen({ navigation }: any) {
 
   const startBotGame = (count: number) => {
       setShowBotModal(false);
-      navigation.navigate('Game', { mode: 'bot', botCount: count });
+      router.push({ pathname: '/game', params: { mode: 'bot', botCount: count } });
   };
 
   const handleCreateRoom = () => {
@@ -96,7 +98,7 @@ export default function LobbyScreen({ navigation }: any) {
               onOpenSettings={() => setShowSettings(true)}
               onOpenBotModal={() => setShowBotModal(true)}
               onMultiplayerClick={handleMultiplayerClick}
-              onDebugCardTest={() => navigation.navigate('CardTest')}
+              onDebugCardTest={() => router.push('/cardTest')}
             />
           )}
 

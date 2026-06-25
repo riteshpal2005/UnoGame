@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator, Alert, Platform, StatusBar as RNStatusBar } from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import * as Clipboard from 'expo-clipboard';
@@ -21,8 +22,12 @@ import { FlyingCard } from '../features/game/components/FlyingCard';
 import { GameOverModal } from '../features/game/components/GameOverModal';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-export default function GameScreen({ navigation, route }: any) {
-    const { mode, botCount, playersList, roomCode } = route.params || {};
+export default function GameScreen() {
+    const router = useRouter();
+    const params = useLocalSearchParams();
+    const mode = params.mode as string;
+    const botCount = params.botCount;
+    const roomCode = params.roomCode as string;
     const [flyingCards, setFlyingCards] = React.useState<{ id: string, card: any, start: { x: number, y: number } }[]>([]);
     
     const opponentsRef = React.useRef<{ [key: string]: { x: number, y: number } }>({});
@@ -55,7 +60,7 @@ export default function GameScreen({ navigation, route }: any) {
 
     const handleExit = () => {
         exitGame();
-        navigation.reset({ index: 0, routes: [{ name: 'Lobby' }] });
+        router.replace('/');
     };
 
     const handleUnoButton = () => {
