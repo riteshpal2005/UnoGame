@@ -7,14 +7,12 @@ import * as Clipboard from 'expo-clipboard';
 import { getSocket } from '../features/multiplayer/utils/socket';
 import { useLobbySocket } from '../features/multiplayer/hooks/useLobbySocket';
 import { useGameStore } from '../features/game/store';
-import { THEME } from '../constants/colors';
 
 import { LobbyMenu } from '../features/lobby/components/LobbyMenu';
 import { LobbyConnection } from '../features/lobby/components/LobbyConnection';
 import { LobbyJoinCreate } from '../features/lobby/components/LobbyJoinCreate';
 import { LobbyRoom } from '../features/lobby/components/LobbyRoom';
 import { BotModal } from '../features/lobby/components/BotModal';
-import { SettingsModal } from '../features/lobby/components/SettingsModal';
 
 type ViewState = 'menu' | 'connect' | 'join_create' | 'inside_room';
 type TabState = 'create' | 'join';
@@ -37,7 +35,6 @@ export default function LobbyScreen() {
   const [nickname, setNickname] = useState('');
   
   const [showBotModal, setShowBotModal] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
   const { customRules, setCustomRules } = useGameStore();
 
 
@@ -88,16 +85,19 @@ export default function LobbyScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar style="light" backgroundColor={THEME.bg} />
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
+    <SafeAreaView className="flex-1 bg-background">
+      <StatusBar style="light" />
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="flex-1 bg-background"
+      >
+        <ScrollView contentContainerClassName="flex-grow p-6 justify-center pt-10" keyboardShouldPersistTaps="handled">
           
           {viewState === 'menu' && (
             <LobbyMenu 
-              onOpenSettings={() => setShowSettings(true)}
+              onOpenSettings={() => router.push('/settings')}
               onOpenBotModal={() => setShowBotModal(true)}
-              onMultiplayerClick={handleMultiplayerClick}
+              onMultiplayerClick={() => setViewState('join_create')}
               onDebugCardTest={() => router.push('/cardTest')}
             />
           )}
@@ -145,32 +145,8 @@ export default function LobbyScreen() {
           onClose={() => setShowBotModal(false)} 
           onStartBotGame={startBotGame} 
         />
-        
-        <SettingsModal 
-          visible={showSettings} 
-          onClose={() => setShowSettings(false)} 
-          customRules={customRules} 
-          setCustomRules={setCustomRules} 
-        />
 
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: THEME.bg,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: THEME.bg,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    padding: 24,
-    alignItems: 'center',
-  },
-});

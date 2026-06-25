@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { THEME } from '../../../constants/colors';
 import { CreateRoomTab } from './CreateRoomTab';
 import { JoinRoomTab } from './JoinRoomTab';
 
@@ -33,34 +32,40 @@ export function LobbyJoinCreate({
   onPaste
 }: LobbyJoinCreateProps) {
   return (
-    <View style={styles.fullWidth}>
-        <TouchableOpacity onPress={onBack} style={styles.backButton}>
-            <MaterialCommunityIcons name="arrow-left" size={20} color={THEME.textDim} />
-            <Text style={styles.backText}>Back</Text>
+    <View className="w-full">
+        <TouchableOpacity onPress={onBack} className="flex-row items-center mb-5 gap-1">
+            <MaterialCommunityIcons name="arrow-left" size={20} className="text-text-secondary" />
+            <Text className="text-text-secondary text-base">Back</Text>
         </TouchableOpacity>
 
-        <View style={[styles.card, { padding: 16, marginBottom: 20 }]}>
-            <Text style={styles.inputLabel}>YOUR NICKNAME</Text>
+        <View className="w-full bg-surface rounded-3xl p-4 mb-5 border border-border items-center">
+            <Text className="text-xs font-bold text-text-secondary mb-2 ml-1 tracking-wider self-start">YOUR NICKNAME</Text>
             <TextInput 
-                style={styles.input} 
+                className="w-full bg-input py-4 px-5 rounded-2xl text-text-primary text-base border border-border"
                 placeholder="Maverick" 
-                placeholderTextColor={THEME.textDim} 
+                placeholderTextColor="rgba(148, 163, 184, 0.5)" 
                 value={nickname} 
                 onChangeText={setNickname} 
             />
         </View>
 
-        <View style={styles.tabContainer}>
-            <View style={styles.tabHeader}>
-                <TouchableOpacity style={[styles.tab, activeTab === 'create' && styles.activeTab]} onPress={() => setActiveTab('create')}>
-                    <Text style={[styles.tabText, activeTab === 'create' && styles.activeTabText]}>Create</Text>
+        <View className="bg-surface rounded-3xl border border-border overflow-hidden">
+            <View className="flex-row bg-input p-1">
+                <TouchableOpacity 
+                    className={`flex-1 py-3 items-center rounded-[20px] ${activeTab === 'create' ? 'bg-surface shadow-sm' : ''}`} 
+                    onPress={() => setActiveTab('create')}
+                >
+                    <Text className={`font-semibold ${activeTab === 'create' ? 'text-primary font-bold' : 'text-text-secondary'}`}>Create</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.tab, activeTab === 'join' && styles.activeTab]} onPress={() => setActiveTab('join')}>
-                    <Text style={[styles.tabText, activeTab === 'join' && styles.activeTabText]}>Join</Text>
+                <TouchableOpacity 
+                    className={`flex-1 py-3 items-center rounded-[20px] ${activeTab === 'join' ? 'bg-surface shadow-sm' : ''}`} 
+                    onPress={() => setActiveTab('join')}
+                >
+                    <Text className={`font-semibold ${activeTab === 'join' ? 'text-primary font-bold' : 'text-text-secondary'}`}>Join</Text>
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.tabContent}>
+            <View className="p-8 items-center">
                 {activeTab === 'create' ? (
                     <CreateRoomTab nickname={nickname} onCreate={onCreate} />
                 ) : (
@@ -78,66 +83,3 @@ export function LobbyJoinCreate({
   );
 }
 
-const styles = StyleSheet.create({
-  fullWidth: { width: '100%' },
-  backButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-    gap: 4,
-  },
-  backText: { color: THEME.textDim, fontSize: 16 },
-  card: {
-    width: '100%',
-    backgroundColor: THEME.card,
-    borderRadius: 24,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: THEME.border,
-  },
-  inputLabel: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: THEME.textDim,
-    marginBottom: 8,
-    marginLeft: 4,
-    letterSpacing: 1,
-    alignSelf: 'flex-start'
-  },
-  input: {
-    width: '100%',
-    backgroundColor: THEME.input,
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderRadius: 16,
-    color: THEME.text,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: THEME.border,
-  },
-  tabContainer: {
-    backgroundColor: THEME.card,
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: THEME.border,
-    overflow: 'hidden',
-  },
-  tabHeader: {
-    flexDirection: 'row',
-    backgroundColor: THEME.input,
-    padding: 4,
-  },
-  tab: {
-    flex: 1,
-    paddingVertical: 12,
-    alignItems: 'center',
-    borderRadius: 20,
-  },
-  activeTab: { backgroundColor: THEME.card },
-  tabText: { fontWeight: '600', color: THEME.textDim },
-  activeTabText: { color: THEME.primary, fontWeight: 'bold' },
-  tabContent: {
-    padding: 30,
-    alignItems: 'center',
-  },
-});

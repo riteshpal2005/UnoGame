@@ -1,12 +1,12 @@
 export type CardColor = 'red' | 'blue' | 'green' | 'yellow' | 'black';
 
-export type CardType = 'number' | 'skip' | 'reverse' | 'draw2' | 'wild' | 'wild4' | 'wild_shuffle' | 'wild_custom';
+export type CardType = 'number' | 'skip' | 'reverse' | 'draw2' | 'wild' | 'wild4' | 'wild_shuffle';
 
 export interface Card {
   id: string;
   color: CardColor;
   type: CardType;
-  value?: number; 
+  value?: number;
   customText?: string;
 }
 

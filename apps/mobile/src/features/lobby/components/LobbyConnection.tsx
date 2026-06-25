@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { THEME } from '../../../constants/colors';
 
 interface LobbyConnectionProps {
   ipAddress: string;
@@ -19,121 +18,38 @@ export function LobbyConnection({
   onBack
 }: LobbyConnectionProps) {
   return (
-    <View style={styles.fullWidth}>
-        <TouchableOpacity onPress={onBack} style={styles.backButton}>
-            <MaterialCommunityIcons name="arrow-left" size={20} color={THEME.textDim} />
-            <Text style={styles.backText}>Back to Menu</Text>
+    <View className="w-full">
+        <TouchableOpacity onPress={onBack} className="flex-row items-center mb-5 gap-1">
+            <MaterialCommunityIcons name="arrow-left" size={20} className="text-text-secondary" />
+            <Text className="text-text-secondary text-base">Back to Menu</Text>
         </TouchableOpacity>
 
-        <View style={styles.card}>
-            <View style={styles.iconCircle}>
-                <MaterialCommunityIcons name="server-network" size={32} color={THEME.primary} />
+        <View className="w-full bg-surface rounded-[24px] p-6 items-center border border-border">
+            <View className="w-20 h-20 rounded-full bg-text-primary justify-center items-center shadow-lg">
+                <MaterialCommunityIcons name="server-network" size={40} className="text-background" />
             </View>
-            <Text style={styles.headerTitle}>Connect to Server</Text>
-            <Text style={styles.headerSubtitle}>Enter IP from 'node server.js' terminal</Text>
+            <Text className="text-2xl font-bold text-text-primary mt-4">Connect to Server</Text>
+            <Text className="text-sm text-text-secondary mt-1 mb-6">Enter IP from 'node server.js' terminal</Text>
             
-            <View style={styles.inputWrapper}>
-                <Text style={styles.inputLabel}>IP ADDRESS</Text>
+            <View className="w-full mb-5">
+                <Text className="text-xs font-bold text-text-secondary mb-2 ml-1 tracking-wider">IP ADDRESS</Text>
                 <TextInput 
-                    style={styles.input} 
+                    className="w-full bg-input py-4 px-5 rounded-2xl text-text-primary text-base border border-border"
                     value={ipAddress} 
                     onChangeText={setIpAddress} 
                     keyboardType="numeric" 
                     placeholder="192.168.x.x"
-                    placeholderTextColor={THEME.textDim}
+                    placeholderTextColor="rgba(148, 163, 184, 0.5)"
                 />
             </View>
 
-            <TouchableOpacity style={styles.btnPrimary} onPress={onConnect}>
-                {isLoading ? <ActivityIndicator color="white"/> : <Text style={styles.btnText}>Connect</Text>}
+            <TouchableOpacity 
+                className="w-full bg-primary py-4 rounded-[16px] items-center shadow-lg shadow-primary/30" 
+                onPress={onConnect}
+            >
+                {isLoading ? <ActivityIndicator color="white"/> : <Text className="text-white text-base font-bold tracking-wide">Connect</Text>}
             </TouchableOpacity>
         </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  fullWidth: {
-    width: '100%',
-  },
-  backButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-    gap: 4,
-  },
-  backText: {
-    color: THEME.textDim,
-    fontSize: 16,
-  },
-  card: {
-    width: '100%',
-    backgroundColor: THEME.card,
-    borderRadius: 24,
-    padding: 24,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: THEME.border,
-  },
-  iconCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: 'rgba(225, 29, 72, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: THEME.text,
-    marginTop: 16,
-  },
-  headerSubtitle: {
-    fontSize: 14,
-    color: THEME.textDim,
-    marginTop: 4,
-    marginBottom: 24,
-  },
-  inputWrapper: {
-    width: '100%',
-    marginBottom: 20,
-  },
-  inputLabel: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: THEME.textDim,
-    marginBottom: 8,
-    marginLeft: 4,
-    letterSpacing: 1,
-  },
-  input: {
-    width: '100%',
-    backgroundColor: THEME.input,
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderRadius: 16,
-    color: THEME.text,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: THEME.border,
-  },
-  btnPrimary: {
-    width: '100%',
-    backgroundColor: THEME.primary,
-    paddingVertical: 18,
-    borderRadius: 16,
-    alignItems: 'center',
-    shadowColor: THEME.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  btnText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    letterSpacing: 0.5,
-  },
-});

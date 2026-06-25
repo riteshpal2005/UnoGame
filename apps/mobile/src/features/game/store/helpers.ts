@@ -16,7 +16,7 @@ export const createGodHand = (rules: string[]): Card[] => {
   const pool = [
     { type: 'wild' }, { type: 'wild' }, { type: 'wild' }, { type: 'wild' },
     { type: 'wild4' }, { type: 'wild4' }, { type: 'wild4' }, { type: 'wild4' },
-    { type: 'wild_shuffle' },
+    { type: 'wild_shuffle' }, { type: 'wild_shuffle' }, { type: 'wild_shuffle' }, { type: 'wild_shuffle' },
     { type: 'wild_custom', text: rules[0] || "Custom 1" },
     { type: 'wild_custom', text: rules[1] || "Custom 2" },
     { type: 'wild_custom', text: rules[2] || "Custom 3" },
@@ -73,7 +73,7 @@ export const processBatchTurn = (
     if (state.players.length === 2) shouldSkip = true;
   }
 
-  const hasShuffle = cardsPlayed.some(c => c.type === 'wild_shuffle' || c.customText === 'Shuffle Hands');
+  const hasShuffle = cardsPlayed.some(c => c.type === 'wild_shuffle');
 
   if (hasShuffle) {
     let allCards: Card[] = [];
@@ -119,6 +119,7 @@ export const processBatchTurn = (
   } else {
     nextIndex = getNextPlayerIndex(state.currentPlayerIndex, state.players.length, newDirection, false);
   }
+
 
   return {
     deck: finalDeck,

@@ -31,7 +31,7 @@ export const createPlayCardSlice: StateCreator<GameStore, [], [], Partial<GameSt
     }
 
     const currentRules = get().customRules;
-    const fullDeck = shuffleDeck(createDeck(currentRules));
+    const fullDeck = shuffleDeck(createDeck());
     let players: Player[] = [];
 
     if (mode === 'bot') {
@@ -79,7 +79,7 @@ export const createPlayCardSlice: StateCreator<GameStore, [], [], Partial<GameSt
   restartGame: () => {
     const state = get();
     const currentRules = state.customRules;
-    const fullDeck = shuffleDeck(createDeck(currentRules));
+    const fullDeck = shuffleDeck(createDeck());
     const resetPlayers = state.players.map(p => ({
       ...p,
       hand: sortHand(fullDeck.splice(0, 7))

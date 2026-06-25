@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { THEME } from '../../../constants/colors';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 interface JoinRoomTabProps {
   nickname: string;
@@ -10,104 +10,35 @@ interface JoinRoomTabProps {
   onPaste: () => void;
 }
 
-export function JoinRoomTab({ nickname, roomCode, setRoomCode, onJoin, onPaste }: JoinRoomTabProps) {
+export function JoinRoomTab({ nickname, roomCode, setRoomCode, onJoin }: JoinRoomTabProps) {
   return (
-    <View style={styles.centerContent}>
-        <Text style={styles.helperText}>Join a Room</Text>
-        <Text style={styles.helperSubText}>Enter the 5-char code.</Text>
+    <View className="items-center w-full">
+        <View className="w-24 h-24 rounded-full bg-text-primary items-center justify-center mb-5 shadow-lg">
+            <MaterialCommunityIcons name="account-group" size={48} className="text-background" />
+        </View>
+        <Text className="text-lg font-bold text-text-primary mb-1">Join a Game</Text>
+        <Text className="text-sm text-text-secondary text-center mb-6">Enter the 4-digit room code.</Text>
         
-        <View style={styles.codeInputWrapper}>
+        <View className="w-full mb-5">
+            <Text className="text-xs font-bold text-text-secondary mb-2 ml-1 tracking-wider">ROOM CODE</Text>
             <TextInput 
-                style={styles.codeInput} 
-                placeholder="CODE" 
-                placeholderTextColor={THEME.textDim} 
-                maxLength={5} 
-                autoCapitalize="characters" 
+                className="w-full bg-input py-4 px-5 rounded-2xl text-text-primary text-2xl font-black tracking-[10px] text-center border border-border"
                 value={roomCode} 
-                onChangeText={(t) => setRoomCode(t.toUpperCase())} 
+                onChangeText={(text) => setRoomCode(text.toUpperCase())} 
+                maxLength={4}
+                autoCapitalize="characters"
+                placeholder="XXXX"
+                placeholderTextColor="rgba(148, 163, 184, 0.5)"
             />
-            <TouchableOpacity style={styles.pasteBtn} onPress={onPaste}>
-                <Text style={styles.pasteText}>PASTE</Text>
-            </TouchableOpacity>
         </View>
 
         <TouchableOpacity 
-            style={[styles.btnPrimary, (!nickname || roomCode.length !== 5) && styles.btnDisabled, { backgroundColor: THEME.secondary }]} 
+            className={`w-full bg-secondary py-4 rounded-2xl items-center shadow-lg shadow-secondary/30 ${(!nickname || roomCode.length < 4) ? 'opacity-50' : ''}`}
             onPress={onJoin}
-            disabled={!nickname || roomCode.length !== 5}
+            disabled={!nickname || roomCode.length < 4}
         >
-            <Text style={styles.btnText}>Join Game</Text>
+            <Text className="text-white text-base font-bold tracking-wide">Join Game</Text>
         </TouchableOpacity>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  centerContent: {
-    alignItems: 'center',
-    width: '100%',
-  },
-  helperText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: THEME.text,
-    marginBottom: 4,
-  },
-  helperSubText: {
-    fontSize: 14,
-    color: THEME.textDim,
-    textAlign: 'center',
-    marginBottom: 24,
-  },
-  codeInputWrapper: {
-    width: '100%',
-    flexDirection: 'row',
-    marginBottom: 20,
-    gap: 10,
-  },
-  codeInput: {
-    flex: 1,
-    backgroundColor: THEME.input,
-    color: THEME.text,
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    letterSpacing: 4,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: THEME.border,
-    paddingVertical: 14,
-  },
-  pasteBtn: {
-    backgroundColor: THEME.card,
-    justifyContent: 'center',
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: THEME.border,
-  },
-  pasteText: {
-    color: THEME.secondary,
-    fontWeight: 'bold',
-    fontSize: 12,
-  },
-  btnPrimary: {
-    width: '100%',
-    backgroundColor: THEME.primary,
-    paddingVertical: 18,
-    borderRadius: 16,
-    alignItems: 'center',
-    shadowColor: THEME.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  btnDisabled: { opacity: 0.5 },
-  btnText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    letterSpacing: 0.5,
-  },
-});

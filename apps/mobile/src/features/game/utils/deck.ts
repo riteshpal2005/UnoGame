@@ -2,7 +2,7 @@ import { Card, CardColor, CardType } from '../../../types';
 
 const COLORS: CardColor[] = ['red', 'blue', 'green', 'yellow'];
 
-export const createDeck = (customRules: string[] = ['Shuffle Hands', 'Shuffle Hands', 'Shuffle Hands']): Card[] => {
+export const createDeck = (): Card[] => {
   const deck: Card[] = [];
   let idCounter = 0;
 
@@ -21,18 +21,8 @@ export const createDeck = (customRules: string[] = ['Shuffle Hands', 'Shuffle Ha
   for (let i = 0; i < 4; i++) {
     deck.push({ id: `c-${idCounter++}`, color: 'black', type: 'wild' });
     deck.push({ id: `c-${idCounter++}`, color: 'black', type: 'wild4' });
+    deck.push({ id: `c-${idCounter++}`, color: 'black', type: 'wild_shuffle' });
   }
-
-  deck.push({ id: `c-${idCounter++}`, color: 'black', type: 'wild_shuffle' });
-
-  customRules.forEach((rule) => {
-    deck.push({ 
-      id: `c-${idCounter++}`, 
-      color: 'black', 
-      type: 'wild_custom',
-      customText: rule || "Shuffle Hands"
-    });
-  });
 
   return deck;
 };

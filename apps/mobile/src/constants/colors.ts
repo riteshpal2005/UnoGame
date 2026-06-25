@@ -1,50 +1,25 @@
+// LEGACY THEME FIX for Phase 3 Transition
+// This file ensures the Game Board compiles while we migrate the Lobby.
+// Do not use THEME for new Lobby components, use NativeWind instead.
 
-export const DARK_THEME = {
-  bg: '#0f172a',
-  card: '#1e293b',
-  primary: '#e11d48',
-  secondary: '#3b82f6',
-  accent: '#8b5cf6',
-  success: '#22c55e',
-  warning: '#eab308',
-  text: '#f8fafc',
-  textDim: '#94a3b8',
+export const THEME = {
+  bg: '#0F172A',
+  card: '#1E293B',
+  primary: '#EF4444',
+  secondary: '#3B82F6',
+  accent: '#10B981',
+  success: '#10B981',
+  warning: '#F59E0B',
+  text: '#F8FAFC',
+  textDim: '#94A3B8',
   border: '#334155',
   input: '#020617',
 };
 
-export const THEME = {
-  bg: '#000000',
-  card: '#020617',
-  primary: '#e11d48',
-  secondary: '#3b82f6',
-  accent: '#8b5cf6',
-  success: '#22c55e',
-  warning: '#eab308',
-  text: '#f8fafc',
-  textDim: '#a1a1aa',
-  border: '#020617',
-  input: '#020617',
-};
-
-export const LIGHT_THEME = {
-  bg: '#f9fafb',
-  card: '#ffffff',
-  primary: '#3b83f6',
-  secondary: '#3b82f6',
-  accent: '#8b5cf6',
-  success: '#22c55e',
-  warning: '#eab308',
-  text: '#111827',
-  textDim: '#6b7280',
-  border: '#e5e7eb',
-  input: '#020617',
-};
-
 export const CARD_COLORS = {
-  red: '#D72600',
-  blue: '#0956BF',
-  green: '#379711',
-  yellow: '#ECD407',
+  red: '#EF4444',
+  blue: '#3B82F6',
+  green: '#10B981',
+  yellow: '#F59E0B',
   black: '#1a1a1a',
 };

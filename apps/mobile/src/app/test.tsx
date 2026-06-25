@@ -5,9 +5,9 @@ import { THEME } from '../constants/colors';
 import { Card } from '../types';
 
 export default function TestScreen() {
-  
-  const topCard: Card = { id:'x', type:'wild', color:'black' };
-  
+
+  const topCard: Card = { id: 'x', type: 'wild', color: 'black' };
+
   const handCards: Card[] = [
     { id: '1', color: 'red', type: 'number', value: 7 },
     { id: '2', color: 'yellow', type: 'skip' },
@@ -21,19 +21,19 @@ export default function TestScreen() {
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.title}>UI Scaling Test</Text>
 
-      {}
+      { }
       <View style={styles.section}>
         <Text style={styles.label}>1. Table Card (Scale 0.8)</Text>
         <View style={styles.centerBox}>
-           <UnoCard card={topCard} scale={0.8} disabled />
+          <UnoCard card={topCard} scale={0.8} disabled />
         </View>
       </View>
 
-      {}
+      { }
       <View style={styles.section}>
         <Text style={styles.label}>2. Hand Cards (Scale 0.6)</Text>
         <Text style={styles.subLabel}>Cards should be tiny but text readable</Text>
-        
+
         <View style={styles.handRow}>
           {handCards.map((card) => (
             <UnoCard key={card.id} card={card} scale={0.6} disabled />
@@ -41,12 +41,12 @@ export default function TestScreen() {
         </View>
       </View>
 
-      {}
+      { }
       <View style={styles.section}>
         <Text style={styles.label}>3. Micro Test (Scale 0.5)</Text>
         <View style={styles.handRow}>
-            <UnoCard card={{id:'x', type:'wild', color:'black'}} scale={0.5} disabled />
-            <UnoCard card={{id:'y', type:'number', value:1, color:'red'}} scale={0.5} disabled />
+          <UnoCard card={{ id: 'x', type: 'wild', color: 'black' }} scale={0.5} disabled />
+          <UnoCard card={{ id: 'y', type: 'number', value: 1, color: 'red' }} scale={0.5} disabled />
         </View>
       </View>
 
