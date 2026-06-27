@@ -10,8 +10,10 @@ export interface ExtendedGameState extends GameState {
   isDebugMode: boolean;
   hasDrawnCard: boolean;
   selectedCardIds: string[];
-  gameStatus: 'lobby' | 'playing' | 'ended';
+  gameStatus: 'lobby' | 'dealing' | 'playing' | 'ended';
   lastAction: { playerId: string; cardId: string; type: 'play' | 'draw' } | null;
+  soundEnabled: boolean;
+  hapticsEnabled: boolean;
 }
 
 export interface GameActions {
@@ -37,9 +39,12 @@ export interface GameActions {
   syncFromSocket: (serverData: any) => void;
 
   setGameState: (newState: ExtendedGameState) => void;
+  setGameStatus: (status: ExtendedGameState['gameStatus']) => void;
   exitGame: () => void;
   debugWinHand: () => void;
   catchUnoFailure: () => void;
+  setSoundEnabled: (enabled: boolean) => void;
+  setHapticsEnabled: (enabled: boolean) => void;
 }
 
 export type GameStore = ExtendedGameState & GameActions;

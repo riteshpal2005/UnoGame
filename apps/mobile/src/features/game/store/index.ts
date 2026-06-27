@@ -18,7 +18,11 @@ export const useGameStore = create<GameStore>()(
     {
       name: 'uno-game-storage',
       storage: createJSONStorage(() => AsyncStorage),
-      partialize: (state) => ({ customRules: state.customRules }),
+      partialize: (state) => ({
+        customRules: state.customRules,
+        soundEnabled: state.soundEnabled,
+        hapticsEnabled: state.hapticsEnabled,
+      }),
     }
   )
 );

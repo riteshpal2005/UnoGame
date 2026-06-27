@@ -19,6 +19,8 @@ export const initialGameState: ExtendedGameState = {
   customRules: ['Shuffle Hands', 'Shuffle Hands', 'Shuffle Hands'],
   lastAction: null,
   myId: null,
+  soundEnabled: true,
+  hapticsEnabled: true,
 };
 
 export const createCoreSlice: StateCreator<GameStore, [], [], ExtendedGameState & Partial<GameStore>> = (set) => ({
@@ -26,7 +28,10 @@ export const createCoreSlice: StateCreator<GameStore, [], [], ExtendedGameState 
 
   setCustomRules: (rules) => set({ customRules: rules }),
   setGameState: (newState) => set(() => ({ ...newState })),
+  setGameStatus: (status) => set({ gameStatus: status }),
   setMyId: (id) => set({ myId: id }),
+  setSoundEnabled: (enabled) => set({ soundEnabled: enabled }),
+  setHapticsEnabled: (enabled) => set({ hapticsEnabled: enabled }),
 
   exitGame: () => set({
     players: [], deck: [], discardPile: [], winner: null, isDebugMode: false, hasDrawnCard: false, selectedCardIds: [], myId: null

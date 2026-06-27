@@ -14,7 +14,9 @@
   "dependencies": {
     "@react-navigation/bottom-tabs": "^7.18.2",
     "@react-navigation/elements": "^2.9.25",
-    "@react-navigation/native-stack": "^7.17.5",
-    "react-native-worklets-core": "^1.6.3"
+    "@react-navigation/native-stack": "^7.17.5"
+  },
+  "devDependencies": {
+    "@types/react": "~19.1.10"
   }
 }

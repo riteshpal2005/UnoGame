@@ -3,6 +3,8 @@ import { GameStore } from './types';
 import { shuffleDeck } from '../utils/deck';
 import { getNextPlayerIndex } from '../utils/gameRules';
 import { sortHand } from './helpers';
+import { triggerHaptic } from '../../../shared/utils/haptics';
+import { playSound } from '../../../shared/utils/sound';
 
 export const createTurnSlice: StateCreator<GameStore, [], [], Partial<GameStore>> = (set, get) => ({
   catchUnoFailure: () => set((state) => {
@@ -18,9 +20,12 @@ export const createTurnSlice: StateCreator<GameStore, [], [], Partial<GameStore>
 
     if (caughtSomeone) {
       alert("CAUGHT! Player forgot to say UNO!");
+      triggerHaptic.success();
+      playSound('uno_call');
       return { players: newPlayers, deck: state.deck.slice(2) };
     } else {
       alert("False Alarm! Everyone is safe.");
+      triggerHaptic.error();
       return state;
     }
   }),
@@ -44,6 +49,9 @@ export const createTurnSlice: StateCreator<GameStore, [], [], Partial<GameStore>
     const newPlayers = [...state.players];
     const newHand = [...newPlayers[playerIndex].hand, card];
     newPlayers[playerIndex] = { ...newPlayers[playerIndex], hand: sortHand(newHand) };
+
+    triggerHaptic.light();
+    playSound('card_draw');
 
     return {
       deck: newDeck,
@@ -93,6 +101,8 @@ export const createTurnSlice: StateCreator<GameStore, [], [], Partial<GameStore>
   sayUno: (playerId) => set((state) => {
     const playerIndex = state.players.findIndex(p => p.id === playerId);
     if (playerIndex !== state.currentPlayerIndex) return state;
+    triggerHaptic.success();
+    playSound('uno_call');
     return { unoCalled: true };
   }),
 });

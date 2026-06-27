@@ -10,7 +10,7 @@ import { useMultiplayer } from '../features/multiplayer/hooks/useMultiplayer';
 import { useBotAI } from '../features/bot/hooks/useBotAI';
 import { useGameSocket } from '../features/multiplayer/hooks/useGameSocket';
 import { socketService } from '../features/multiplayer/utils/socketService';
-import { THEME } from '../constants/colors';
+
 
 import { GameHeader } from '../features/game/components/GameHeader';
 import { OpponentRow } from '../features/game/components/OpponentRow';
@@ -21,6 +21,7 @@ import { ColorPickerModal } from '../features/game/components/ColorPickerModal';
 import { FlyingCard } from '../features/game/components/FlyingCard';
 import { GameOverModal } from '../features/game/components/GameOverModal';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Animated } from 'react-native';
 
 export default function GameScreen() {
     const router = useRouter();
@@ -40,8 +41,25 @@ export default function GameScreen() {
     const {
         startGame, players, discardPile, currentPlayerIndex, currentColor, isChoosingColor,
         unoCalled, winner, debugWinHand, hasDrawnCard, selectedCardIds,
-        toggleCardSelection, restartGame, exitGame, myId, syncFromSocket
+        toggleCardSelection, restartGame, exitGame, myId, syncFromSocket,
+        gameStatus,
+        setGameStatus
     } = useGameStore();
+
+    const fadeAnim = React.useRef(new Animated.Value(0)).current;
+
+    // Trigger Dealing Animation logic
+    useEffect(() => {
+        if (isBotMode && gameStatus === 'dealing') {
+            Animated.timing(fadeAnim, { toValue: 1, duration: 300, useNativeDriver: true }).start();
+            const timer = setTimeout(() => {
+                setGameStatus('playing');
+            }, 2000);
+            return () => clearTimeout(timer);
+        } else {
+            Animated.timing(fadeAnim, { toValue: 0, duration: 500, useNativeDriver: true }).start();
+        }
+    }, [isBotMode, gameStatus]);
 
     const { mpDrawCard, mpPassTurn, mpSayUno, mpSelectColor, mpPlaySelected } = useMultiplayer(mode, roomCode);
 
@@ -92,9 +110,9 @@ export default function GameScreen() {
 
     if (!players.length || !discardPile.length || !humanPlayer) {
         return (
-            <View style={{ flex: 1, backgroundColor: THEME.bg, justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" color={THEME.primary} />
-                <Text style={{ color: THEME.textDim, marginTop: 20 }}>Dealing Cards...</Text>
+            <View className="flex-1 bg-background justify-center items-center">
+                <ActivityIndicator size="large" color="#EF4444" />
+                <Text className="text-text-secondary mt-5">Dealing Cards...</Text>
             </View>
         );
     }
@@ -103,8 +121,19 @@ export default function GameScreen() {
     const topCard = discardPile[discardPile.length - 1];
 
     return (
-        <SafeAreaView style={styles.container}>
-            <StatusBar style="light" backgroundColor={THEME.bg} />
+        <SafeAreaView className="flex-1 bg-background">
+            <StatusBar style="light" />
+
+            {gameStatus === 'dealing' && (
+                <Animated.View 
+                    style={[StyleSheet.absoluteFillObject, { opacity: fadeAnim, backgroundColor: 'rgba(15, 23, 42, 0.9)', justifyContent: 'center', alignItems: 'center', zIndex: 50 }]}
+                >
+                    <ActivityIndicator size="large" color="#F8FAFC" style={{ marginBottom: 16 }} />
+                    <Text style={{ color: '#F8FAFC', fontSize: 20, fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: 2 }}>
+                        Dealing Hands...
+                    </Text>
+                </Animated.View>
+            )}
 
             <GameHeader 
                 mode={mode}
@@ -141,7 +170,7 @@ export default function GameScreen() {
             </TableCenter>
 
             <View
-                style={styles.handContainer}
+                className="h-[140px] justify-end pb-3"
                 onLayout={(event) => {
                     const { x, y } = event.nativeEvent.layout;
                     handRef.current = { x: x + 20, y: y + 480 };
@@ -165,7 +194,7 @@ export default function GameScreen() {
             />
 
             {(mode === 'host' || mode === 'bot') && (
-                <TouchableOpacity style={styles.debugBtn} onPress={debugWinHand}>
+                <TouchableOpacity className="absolute bottom-3 right-3 p-3" onPress={debugWinHand}>
                     <MaterialCommunityIcons name="lightning-bolt" size={16} color="rgba(255,255,255,0.2)" />
                 </TouchableOpacity>
             )}
@@ -185,22 +214,3 @@ export default function GameScreen() {
         </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: THEME.bg,
-        paddingTop: Platform.OS === 'android' ? RNStatusBar.currentHeight : 0,
-    },
-    handContainer: {
-        height: 140,
-        justifyContent: 'flex-end',
-        paddingBottom: 10,
-    },
-    debugBtn: {
-        position: 'absolute',
-        bottom: 10,
-        right: 10,
-        padding: 10,
-    }
-});

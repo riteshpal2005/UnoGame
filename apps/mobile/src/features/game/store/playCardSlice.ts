@@ -4,6 +4,8 @@ import { Card, Player } from '../../../types';
 import { createDeck, shuffleDeck } from '../utils/deck';
 import { isValidMove } from '../utils/gameRules';
 import { generatePlayers, createGodHand, sortHand, processBatchTurn } from './helpers';
+import { triggerHaptic } from '../../../shared/utils/haptics';
+import { playSound } from '../../../shared/utils/sound';
 
 export const createPlayCardSlice: StateCreator<GameStore, [], [], Partial<GameStore>> = (set, get) => ({
   startGame: (
@@ -58,7 +60,7 @@ export const createPlayCardSlice: StateCreator<GameStore, [], [], Partial<GameSt
     }
 
     set({
-      gameStatus: 'playing',
+      gameStatus: mode === 'bot' ? 'dealing' : 'playing',
       deck: fullDeck,
       discardPile: [topCard],
       players: players,
@@ -110,6 +112,7 @@ export const createPlayCardSlice: StateCreator<GameStore, [], [], Partial<GameSt
 
     const topCard = state.discardPile[state.discardPile.length - 1];
     if (!isValidMove(card, topCard, state.currentColor)) {
+      triggerHaptic.error();
       return state;
     }
 
@@ -120,6 +123,8 @@ export const createPlayCardSlice: StateCreator<GameStore, [], [], Partial<GameSt
     if (remainingHandSize === 0) {
       const winningPlayers = [...state.players];
       winningPlayers[pIndex] = { ...winningPlayers[pIndex], hand: [] };
+      triggerHaptic.success();
+      playSound('victory');
       return {
         players: winningPlayers,
         discardPile: [...state.discardPile, card],
@@ -134,6 +139,8 @@ export const createPlayCardSlice: StateCreator<GameStore, [], [], Partial<GameSt
         ...newPlayers[pIndex],
         hand: newPlayers[pIndex].hand.filter(c => c.id !== card.id)
       };
+      triggerHaptic.light();
+      playSound('card_play');
       return {
         players: newPlayers,
         isChoosingColor: true,
@@ -144,6 +151,9 @@ export const createPlayCardSlice: StateCreator<GameStore, [], [], Partial<GameSt
     }
 
     const newState = processBatchTurn(state, playerId, [card], card.color, 0);
+
+    triggerHaptic.light();
+    playSound('card_play');
 
     return {
       ...newState,
@@ -166,6 +176,7 @@ export const createPlayCardSlice: StateCreator<GameStore, [], [], Partial<GameSt
     const topCard = state.discardPile[state.discardPile.length - 1];
     if (!isValidMove(cardsToPlay[0], topCard, state.currentColor)) {
       alert("Invalid Move!");
+      triggerHaptic.error();
       return { selectedCardIds: [] };
     }
 
@@ -174,6 +185,8 @@ export const createPlayCardSlice: StateCreator<GameStore, [], [], Partial<GameSt
       const winningPlayers = [...state.players];
       const myIndex = state.players.findIndex(p => p.id === me.id);
       winningPlayers[myIndex] = { ...winningPlayers[myIndex], hand: [] };
+      triggerHaptic.success();
+      playSound('victory');
       return {
         players: winningPlayers,
         discardPile: [...state.discardPile, ...cardsToPlay],
@@ -184,6 +197,7 @@ export const createPlayCardSlice: StateCreator<GameStore, [], [], Partial<GameSt
 
     if (remainingHandSize === 1 && !state.unoCalled) {
       alert("Forgot to say UNO! Draw 2 Penalty!");
+      triggerHaptic.error();
     }
 
     if (cardsToPlay[0].type.startsWith('wild')) {
@@ -194,6 +208,9 @@ export const createPlayCardSlice: StateCreator<GameStore, [], [], Partial<GameSt
         hand: newPlayers[myIndex].hand.filter(c => !state.selectedCardIds.includes(c.id))
       };
 
+      triggerHaptic.light();
+      playSound('card_play');
+
       return {
         players: newPlayers,
         isChoosingColor: true,
@@ -202,6 +219,9 @@ export const createPlayCardSlice: StateCreator<GameStore, [], [], Partial<GameSt
         hasDrawnCard: false
       };
     }
+
+    triggerHaptic.light();
+    playSound('card_play');
 
     return processBatchTurn(state, me.id, cardsToPlay, cardsToPlay[0].color, remainingHandSize === 1 && !state.unoCalled ? 2 : 0);
   }),
